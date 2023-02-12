@@ -44,26 +44,28 @@ const getWeatherCurrent = () => fetch(weatherApiCurrent)
   const weatherApiCustom = `http://api.openweathermap.org/geo/1.0/direct?q=${inpCity}&limit=1&appid=b82efa1d95b00bf3c54041947d07a6d4`;
   const weatherApiTemp = `https://api.open-meteo.com/v1/forecast?latitude=${customLat}&longitude=${customLong}&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m`
   //fetching the latitude and longitude of the given city
-  const getWeatherCustom = async() => {
-  const getData = await fetch(weatherApiCustom).then(res => res.json())
+  const getLongLatCustom = () => {
+ fetch(weatherApiCustom).then(res => res.json())
 .then(data => {
   console.log(data);
   setCustomLat(data[0].lat);
   setCustomLong(data[0].lon);
-  //fetching the weather using the latitude and longitude
-  fetch(weatherApiTemp)
-  .then(res => res.json())
-  .then(data => {
-    console.log(data);
   
-    setCustomTemp(data.current_weather.temperature+"°C");
-    setwindSpeed(data.current_weather.windspeed+"km/h");
-    setHumidity(data.hourly.relativehumidity_2m[data.hourly.relativehumidity_2m.length-1]+"%");
-  })
-})
-  };
 
-  // const getWeatherInDegrees = () => 
+})
+ 
+  };
+//fetching the weather using the latitude and longitude of the given city
+const getCustomWeather = ()=>  fetch(weatherApiTemp)
+.then(res => res.json())
+.then(data => {
+  console.log(data);
+
+  setCustomTemp(data.current_weather.temperature+"°C");
+  setwindSpeed(data.current_weather.windspeed+"km/h");
+  setHumidity(data.hourly.relativehumidity_2m[data.hourly.relativehumidity_2m.length-1]+"%");
+})
+
   return (
     <div className="App">
     <h1>Weather App</h1>
@@ -75,8 +77,11 @@ const getWeatherCurrent = () => fetch(weatherApiCurrent)
   }
   <button onClick={getWeatherCurrent}>Fetch weather for current city</button>
   <h3>Temperature: {currentTemp}</h3>
-  <input type="text" placeholder='Enter the city' onChange={(e)=>setinpCity(e.target.value)}/>
-  <button onClick={getWeatherCustom}>Find!</button>
+  <input type="text" placeholder='Enter the city' onChange={(e)=>{
+    setinpCity(e.target.value)
+  getLongLatCustom();
+  }}/>
+  <button onClick={getCustomWeather}>Find!</button>
   <h3>Temp: {customTemp}</h3>
   <h3>Windspeed: {windSpeed}</h3>
   <h3>Humidity : {Humidity}</h3>
