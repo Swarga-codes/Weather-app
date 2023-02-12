@@ -13,6 +13,8 @@ function App() {
  const[customLat,setCustomLat]=useState(''); 
  const[customLong,setCustomLong]=useState('');
  const[customTemp,setCustomTemp]=useState();
+const[windSpeed,setwindSpeed]=useState();
+const[Humidity,setHumidity]=useState();
  useEffect(()=>{
   navigator.geolocation.getCurrentPosition((position)=>{
   console.log(position.coords);
@@ -42,8 +44,8 @@ const getWeatherCurrent = () => fetch(weatherApiCurrent)
   const weatherApiCustom = `http://api.openweathermap.org/geo/1.0/direct?q=${inpCity}&limit=1&appid=b82efa1d95b00bf3c54041947d07a6d4`;
   const weatherApiTemp = `https://api.open-meteo.com/v1/forecast?latitude=${customLat}&longitude=${customLong}&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m`
   //fetching the latitude and longitude of the given city
-  const getWeatherCustom = async() => fetch(weatherApiCustom)
-.then(res => res.json())
+  const getWeatherCustom = async() => {
+  const getData = await fetch(weatherApiCustom).then(res => res.json())
 .then(data => {
   console.log(data);
   setCustomLat(data[0].lat);
@@ -53,10 +55,13 @@ const getWeatherCurrent = () => fetch(weatherApiCurrent)
   .then(res => res.json())
   .then(data => {
     console.log(data);
-    setCustomTemp(data.current_weather.temperature+"°C");
   
-  });
+    setCustomTemp(data.current_weather.temperature+"°C");
+    setwindSpeed(data.current_weather.windspeed+"km/h");
+    setHumidity(data.hourly.relativehumidity_2m[data.hourly.relativehumidity_2m.length-1]+"%");
+  })
 })
+  };
 
   // const getWeatherInDegrees = () => 
   return (
@@ -69,10 +74,12 @@ const getWeatherCurrent = () => fetch(weatherApiCurrent)
     <h3>Place : {city}, {state}</h3>
   }
   <button onClick={getWeatherCurrent}>Fetch weather for current city</button>
-  <h1>Temperature: {currentTemp}</h1>
+  <h3>Temperature: {currentTemp}</h3>
   <input type="text" placeholder='Enter the city' onChange={(e)=>setinpCity(e.target.value)}/>
   <button onClick={getWeatherCustom}>Find!</button>
   <h3>Temp: {customTemp}</h3>
+  <h3>Windspeed: {windSpeed}</h3>
+  <h3>Humidity : {Humidity}</h3>
      </div>
    
   );
