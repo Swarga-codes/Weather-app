@@ -58,9 +58,9 @@ const getCustomWeather = ()=>  fetch(weatherApiTemp)
 .then(data => {
   console.log(data);
 
-  setCustomTemp(data.current_weather.temperature+"°C");
-  setwindSpeed(data.current_weather.windspeed+"km/h");
-  setHumidity(data.hourly.relativehumidity_2m[data.hourly.relativehumidity_2m.length-1]+"%");
+  setCustomTemp(data.current_weather.temperature);
+  setwindSpeed(data.current_weather.windspeed);
+  setHumidity(data.hourly.relativehumidity_2m[data.hourly.relativehumidity_2m.length-1]);
 })
 
   return (
