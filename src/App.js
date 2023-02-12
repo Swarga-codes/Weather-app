@@ -10,8 +10,8 @@ function App() {
  const[state, setState]=useState('');
  const[currentTemp, setcurrentTemp] = useState();
  const[inpCity,setinpCity]=useState('');
- const[customLat,setCustomLat]=useState(''); 
- const[customLong,setCustomLong]=useState('');
+ const[customLat,setCustomLat]=useState(); 
+ const[customLong,setCustomLong]=useState();
  const[customTemp,setCustomTemp]=useState();
 const[windSpeed,setwindSpeed]=useState();
 const[Humidity,setHumidity]=useState();
