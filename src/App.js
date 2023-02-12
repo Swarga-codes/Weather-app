@@ -44,16 +44,13 @@ const getWeatherCurrent = () => fetch(weatherApiCurrent)
   const weatherApiCustom = `http://api.openweathermap.org/geo/1.0/direct?q=${inpCity}&limit=1&appid=b82efa1d95b00bf3c54041947d07a6d4`;
   const weatherApiTemp = `https://api.open-meteo.com/v1/forecast?latitude=${customLat}&longitude=${customLong}&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m`
   //fetching the latitude and longitude of the given city
-  const getLongLatCustom = () => {
- fetch(weatherApiCustom).then(res => res.json())
+  const getLongLatCustom = async() => {
+ await fetch(weatherApiCustom).then(res => res.json())
 .then(data => {
   console.log(data);
   setCustomLat(data[0].lat);
   setCustomLong(data[0].lon);
-  
-
 })
- 
   };
 //fetching the weather using the latitude and longitude of the given city
 const getCustomWeather = ()=>  fetch(weatherApiTemp)
