@@ -13,8 +13,8 @@ function App() {
 //  const[customLat,setCustomLat]=useState(); 
 //  const[customLong,setCustomLong]=useState();
  const[customTemp,setCustomTemp]=useState();
-// const[windSpeed,setwindSpeed]=useState();
-// const[Humidity,setHumidity]=useState();
+const[windSpeed,setwindSpeed]=useState();
+const[Humidity,setHumidity]=useState();
  useEffect(()=>{
   navigator.geolocation.getCurrentPosition((position)=>{
   console.log(position.coords);
@@ -66,7 +66,9 @@ const test = () => fetch(`https://api.openweathermap.org/data/2.5/weather?q=${in
 .then(res=> res.json())
 .then(data => {
   console.log(data);
-  setCustomTemp(data.main.temp);
+  setCustomTemp(parseFloat(data.main.temp-273.15).toFixed(2)+"°C");
+    setwindSpeed(data.wind.speed+"km/hr");
+  setHumidity(data.main.humidity+"%");
 }
   )
   return (
@@ -82,12 +84,11 @@ const test = () => fetch(`https://api.openweathermap.org/data/2.5/weather?q=${in
   <h3>Temperature: {currentTemp}</h3>
   <input type="text" placeholder='Enter the city' onChange={(e)=>{
     setinpCity(e.target.value)
-  // getLongLatCustom();
   }}/>
   <button onClick={test}>Find!</button>
   <h3>Temp: {customTemp}</h3>
-  {/*<h3>Windspeed: {windSpeed}</h3>
-<h3>Humidity : {Humidity}</h3>*/}
+  <h3>Windspeed: {windSpeed}</h3>
+<h3>Humidity : {Humidity}</h3>
      </div>
    
   );
