@@ -13,6 +13,8 @@ function App() {
   const [windSpeed, setwindSpeed] = useState();
   const [Humidity, setHumidity] = useState();
   const[notFound,setNotFound]=useState('');
+  const[weather,setWeather]=useState('');
+  const[weatherDisplay,setWeatherDisplay]=useState('');
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       console.log(position.coords);
@@ -53,10 +55,14 @@ function App() {
         setCustomTemp(parseFloat(data.main.temp - 273.15).toFixed(2) + "°C");
         setwindSpeed(data.wind.speed + "km/hr");
         setHumidity(data.main.humidity + "%");
+        setWeather(data.weather[0].description);
+        setWeatherDisplay(data.weather[0].icon);
+      
       }).catch((err)=>{
         console.log(err);
         setNotFound('City Not Found');
       });
+        var uri=`https://openweathermap.org/img/wn/${weatherDisplay}@2x.png`;
   return (
     <div className="App">
     <nav className="navbar bg-light-dark">
@@ -91,6 +97,8 @@ function App() {
       <h3>Temperature: {customTemp}</h3>
       <h3>Windspeed: {windSpeed}</h3>
       <h3>Humidity : {Humidity}</h3>
+      <img src={uri} alt="" />
+      <p>Weather : {weather}</p>
       </>
       }
      
