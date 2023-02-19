@@ -12,6 +12,7 @@ function App() {
   const [customTemp, setCustomTemp] = useState();
   const [windSpeed, setwindSpeed] = useState();
   const [Humidity, setHumidity] = useState();
+  const[notFound,setNotFound]=useState('');
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       console.log(position.coords);
@@ -28,7 +29,7 @@ function App() {
           setState(data.principalSubdivision);
         });
     });
-  });
+ 
   const weatherApiCurrent = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m`;
   //fetching the weather of the current city
   const getWeatherCurrent = () =>
@@ -38,6 +39,8 @@ function App() {
         console.log(data);
         setcurrentTemp(data.current_weather.temperature + "°C");
       });
+      getWeatherCurrent();
+       });
   //fetching the weather of the given input city
   const getCustomWeather = () =>
     fetch(
@@ -46,36 +49,53 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        setNotFound('');
         setCustomTemp(parseFloat(data.main.temp - 273.15).toFixed(2) + "°C");
         setwindSpeed(data.wind.speed + "km/hr");
         setHumidity(data.main.humidity + "%");
+      }).catch((err)=>{
+        console.log(err);
+        setNotFound('City Not Found');
       });
   return (
     <div className="App">
-      <h1>Weather App</h1>
-      <p>by</p>
-      <h4>Markus</h4>
-      <h2>Current city</h2>
+    <nav className="navbar bg-light-dark">
+    <div className="container-fluid">
+      <span className="navbar-brand mb-0 h1" id="nav-title">My Weather App</span>
+    </div>
+  </nav>
       {loader ? (
         <h3>Loading...</h3>
       ) : (
+        <>
         <h3>
-          Place : {city}, {state}
+          Current City : {city}, {state}
         </h3>
+        <h3>Temperature: {currentTemp}</h3>
+        </>
       )}
-      <button onClick={getWeatherCurrent}>
-        Fetch weather for current city
-      </button>
-      <h3>Temperature: {currentTemp}</h3>
+    
       <input
         type="text"
         placeholder="Enter the city"
         onChange={(e) => setinpCity(e.target.value)}
+        className='input_city'
       />
-      <button onClick={getCustomWeather}>Find!</button>
-      <h3>Temp: {customTemp}</h3>
+      <br />
+      <button onClick={getCustomWeather} className='btn btn-primary'>Search Weather!</button>
+      <div className="search_results">
+      {notFound?
+      <h3>{notFound}</h3>
+      :
+      <>
+      <h3>Temperature: {customTemp}</h3>
       <h3>Windspeed: {windSpeed}</h3>
       <h3>Humidity : {Humidity}</h3>
+      </>
+      }
+     
+      </div>
+    
     </div>
   );
 }
